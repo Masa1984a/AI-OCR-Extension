@@ -420,7 +420,10 @@ saveJsonBtn.addEventListener('click', () => {
 backBtn.addEventListener('click', () => {
   // Save any edited data before going back
   const updatedData = updateOcrData();
-  chrome.storage.local.set({ 'ocrResults': JSON.stringify(updatedData) });
+  chrome.storage.local.set({
+    'ocrResults': JSON.stringify(updatedData),
+    'preserveImageOnReturn': true // Flag to preserve the image when returning to popup.html
+  });
   
   // Navigate back to the camera screen (popup.html)
   window.location.href = 'popup.html';

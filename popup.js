@@ -37,8 +37,38 @@ function startCamera() {
     });
 }
 
-// 1. 初期カメラ起動
-startCamera();
+// 1. 初期化 - カメラ起動または画像の復元
+chrome.storage.local.get(['preserveImageOnReturn', 'capturedImageData'], (data) => {
+  if (data.preserveImageOnReturn && data.capturedImageData) {
+    // 「戻る」ボタンから戻ってきた場合、画像を復元
+    // 画像を表示
+    capturedImage.src = data.capturedImageData;
+    capturedImage.style.display = 'block';
+    video.style.display = 'none';
+    
+    // キャンバスにも画像を描画する（OCR処理用）
+    const img = new Image();
+    img.onload = function() {
+      // キャンバスのサイズを画像に合わせる
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, img.width, img.height);
+    };
+    img.src = data.capturedImageData;
+    
+    // ボタン状態を設定
+    captureBtn.style.display = 'none'; // 「撮影」ボタンを非表示
+    resetBtn.style.display = 'block';
+    ocrBtn.disabled = false;
+    
+    // フラグをリセット
+    chrome.storage.local.remove('preserveImageOnReturn');
+  } else {
+    // 通常の初期化 - カメラ起動
+    startCamera();
+  }
+});
 
 // 2. 撮影(キャプチャ) → Canvasに描画 → 動画を非表示 + 画像プレビューを表示
 captureBtn.addEventListener('click', () => {
@@ -72,8 +102,9 @@ captureBtn.addEventListener('click', () => {
   
   // その他ボタン活性化
   ocrBtn.disabled = false;
-  // 追加: 撮り直しボタン表示
+  // 追加: 撮り直しボタン表示、撮影ボタン非表示
   resetBtn.style.display = 'block';
+  captureBtn.style.display = 'none'; // 撮影ボタンを非表示に
 });
 
 // AIモデル選択の参照を取得
@@ -533,7 +564,8 @@ async function processWithChatGPT(base64Data, apiKey) {
 
 // 3. OCRボタン押下時に画像を送信 → 結果を取得
 ocrBtn.addEventListener('click', async () => {
-if (!canvas) {
+// キャンバスがあるか、および有効な画像データが含まれているかチェック
+if (!canvas || canvas.width === 0 || canvas.height === 0) {
   alert('画像が撮影されていません。');
   return;
 }
@@ -626,6 +658,9 @@ resetBtn.addEventListener('click', () => {
   // 状態をリセット
   capturedImage.style.display = 'none';
   ocrBtn.disabled = true;
+  
+  // 撮影ボタンを表示
+  captureBtn.style.display = 'block';
   
   // カメラを再起動
   startCamera()
