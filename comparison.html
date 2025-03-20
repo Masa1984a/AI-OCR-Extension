@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>OCR結果確認</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+        max-width: 1200px;
+      }
+      h1, h2 {
+        margin: 0.5em 0;
+      }
+      button {
+        margin: 8px 8px 8px 0;
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .image-section, .results-section {
+        flex: 1;
+        min-width: 300px;
+      }
+      .image-section {
+        display: flex;
+        flex-direction: column;
+      }
+      #originalImage {
+        max-width: 100%;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+      }
+      #cropOverlay {
+        position: absolute;
+        border: 3px solid rgba(255, 0, 0, 0.8);
+        background-color: rgba(255, 0, 0, 0.2);
+        pointer-events: none;
+        display: none;
+        z-index: 10;
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+      }
+      .image-container {
+        position: relative;
+        margin-bottom: 20px;
+        overflow: visible;
+      }
+      #originalImage {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .form-group input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .form-group textarea {
+        width: 100%;
+        height: 80px;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+      }
+      #backBtn {
+        background-color: #f5f5f5;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OCR結果確認</h1>
+    
+    <div class="container">
+      <!-- 左側: 画像表示エリア -->
+      <div class="image-section">
+        <h2>撮影された画像</h2>
+        <div class="image-container">
+          <img id="originalImage" alt="撮影画像" />
+          <div id="cropOverlay"></div>
+        </div>
+      </div>
+      
+      <!-- 右側: OCR結果表示エリア -->
+      <div class="results-section">
+        <h2>OCR結果</h2>
+        
+        <div class="form-group">
+          <label for="payeeName">支払先会社名</label>
+          <input type="text" id="payeeName" />
+        </div>
+        
+        <div class="form-group">
+          <label for="issueDate">発行日</label>
+          <input type="text" id="issueDate" />
+        </div>
+        
+        <div class="form-group">
+          <label for="amountIncludingTax">支払金額税込</label>
+          <input type="text" id="amountIncludingTax" />
+        </div>
+        
+        <div class="form-group">
+          <label for="currency">通貨</label>
+          <input type="text" id="currency" />
+        </div>
+        
+        <div class="form-group">
+          <label for="registrationNumber">登録番号</label>
+          <input type="text" id="registrationNumber" />
+        </div>
+        
+        <div class="form-group">
+          <label for="notes">注記</label>
+          <textarea id="notes"></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="button-group">
+      <button id="backBtn">戻る</button>
+      <button id="saveImageBtn">画像を保存</button>
+      <button id="saveJsonBtn">JSONを保存</button>
+    </div>
+    
+    <!-- Debug JSON Display -->
+    <div class="form-group" style="margin-top: 20px;">
+      <h3>デバッグ用JSON</h3>
+      <textarea id="debugJson" style="width: 100%; height: 150px; font-family: monospace;"></textarea>
+    </div>
+    
+    <!-- Canvas for image data processing (hidden) -->
+    <canvas id="hiddenCanvas" style="display:none;"></canvas>
+    
+    <script src="comparison.js"></script>
+  </body>
+</html>

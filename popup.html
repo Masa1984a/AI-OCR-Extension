@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>領収書OCR</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      h1, h2 {
+        margin: 0.5em 0;
+      }
+      button {
+        margin: 8px 8px 8px 0;
+        padding: 8px 16px;
+        cursor: pointer;
+      }
+      /* 動画/画像の枠のスタイル */
+      #video, #capturedImage {
+        display: block;
+        width: 100%;
+        max-height: 480px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        margin-bottom: 15px;
+        background: #eee;
+      }
+      .section {
+        margin-bottom: 20px;
+      }
+      /* ボタングループのスタイル */
+      .button-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      /* 撮り直しボタンの強調スタイル */
+      #resetBtn {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+      }
+      /* コンテナーレイアウト */
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      /* AIモデル選択 */
+      .model-selection {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .model-selection label {
+        font-weight: bold;
+      }
+      .model-selection select {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      /* レスポンシブ対応 */
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+        #video, #capturedImage {
+          max-height: 360px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>領収書 OCR</h1>
+      
+      <!-- AIモデル選択 -->
+      <div class="model-selection">
+        <label for="aiModel">AIモデル:</label>
+        <select id="aiModel">
+          <option value="gemini">Gemini 2.0 Flash</option>
+          <option value="claude">Claude 3.7 Sonnet</option>
+          <option value="chatgpt">ChatGPT-4o</option>
+        </select>
+      </div>
+      
+      <!-- カメラ映像／撮影画像エリア -->
+      <div class="section">
+        <video id="video" autoplay></video>
+        <img id="capturedImage" alt="撮影画像プレビュー" style="display:none;" />
+        <!-- Canvas要素 -->
+        <canvas id="canvas" style="display:none;"></canvas>
+      </div>
+      <!-- ボタン群 -->
+      <div class="section button-group">
+        <button id="captureBtn">撮影</button>
+        <button id="resetBtn" style="display:none;">撮り直し</button>
+        <button id="ocrBtn" disabled>OCR解析</button>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

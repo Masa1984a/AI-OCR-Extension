@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI OCR Extension - Options</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      h1 {
+        margin: 0 0 20px 0;
+        color: #333;
+      }
+      
+      .form-group {
+        margin-bottom: 20px;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+      
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      
+      button {
+        background-color: #4285f4;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      
+      button:hover {
+        background-color: #3367d6;
+      }
+      
+      .info {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #e8f0fe;
+        border-left: 4px solid #4285f4;
+        border-radius: 4px;
+      }
+      
+      .api-section {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .api-section:last-child {
+        border-bottom: none;
+      }
+      
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+        }
+      }
+      
+      /* 追加スタイル: APIキー表示切替ボタン関連 */
+      .input-with-toggle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+      
+      .input-with-toggle input {
+        flex: 1;
+        margin-right: 8px;
+      }
+      
+      .toggle-visibility {
+        background-color: #f0f0f0;
+        color: #333;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      
+      .toggle-visibility:hover {
+        background-color: #e3e3e3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>AI OCR APIキー設定</h1>
+      
+      <div class="api-section">
+        <h2>Google Gemini</h2>
+        <div class="form-group">
+          <label for="geminiApiKey">API Key:</label>
+          <div class="input-with-toggle">
+            <input type="password" id="geminiApiKey" placeholder="Google Gemini API Keyを入力してください" />
+            <button type="button" class="toggle-visibility" data-for="geminiApiKey">表示</button>
+          </div>
+        </div>
+        <div class="info">
+          <p>Gemini 2.0 Flash API Keyは<a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>から取得できます。</p>
+        </div>
+      </div>
+      
+      <div class="api-section">
+        <h2>Anthropic Claude</h2>
+        <div class="form-group">
+          <label for="claudeApiKey">API Key:</label>
+          <div class="input-with-toggle">
+            <input type="password" id="claudeApiKey" placeholder="Anthropic Claude API Keyを入力してください" />
+            <button type="button" class="toggle-visibility" data-for="claudeApiKey">表示</button>
+          </div>
+        </div>
+        <div class="info">
+          <p>Claude API Keyは<a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>から取得できます。</p>
+        </div>
+      </div>
+      
+      <div class="api-section">
+        <h2>OpenAI ChatGPT</h2>
+        <div class="form-group">
+          <label for="openaiApiKey">API Key:</label>
+          <div class="input-with-toggle">
+            <input type="password" id="openaiApiKey" placeholder="OpenAI ChatGPT API Keyを入力してください" />
+            <button type="button" class="toggle-visibility" data-for="openaiApiKey">表示</button>
+          </div>
+        </div>
+        <div class="info">
+          <p>OpenAI API Keyは<a href="https://platform.openai.com/api-keys" target="_blank">OpenAI Platform</a>から取得できます。</p>
+        </div>
+      </div>
+      
+      <button id="saveKey">保存</button>
+      
+      <div class="info">
+        <p>入力したAPIキーはこの拡張機能内でのみ使用され、OCR処理のために必要です。</p>
+      </div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
