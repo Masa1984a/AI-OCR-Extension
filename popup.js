@@ -513,12 +513,218 @@ async function processWithChatGPT(base64Data, apiKey) {
           {
             type: "image_url",
             image_url: {
-              url: `data:image/jpeg;base64,${base64Data}`
+              url: `data:image/png;base64,${base64Data}`
             }
           }
         ]
       }
     ],
+    response_format: {
+      type: 'json_schema',
+      json_schema: {
+        name: 'InvoiceFields',
+        strict: true,
+        schema: {
+          title: 'InvoiceFields',
+          type: 'object',
+          properties: {
+            imageWidthPx: {
+              type: 'number',
+              description: '撮影した画像の幅(px)'
+            },
+            imageHeightPx: {
+              type: 'number',
+              description: '撮影した画像の高さ(px)'
+            },
+            payeeName: {
+              type: 'object',
+              title: '支払先会社名',
+              description: '支払先の会社名。宛名や請求先ではなく、実際に支払う先の会社名を示します。',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（支払先会社名）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            },
+            issueDate: {
+              type: 'object',
+              title: '発行日',
+              description: '領収書を発行した日付（YYYY-MM-DD形式）',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（発行日）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            },
+            amountIncludingTax: {
+              type: 'object',
+              title: '支払金額税込',
+              description: '税込み合計金額（カンマ区切り、小数点以下2桁まで）。税抜き金額しかない場合は、税額を加算して税込みにしてください。',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（支払金額税込）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            },
+            currency: {
+              type: 'object',
+              title: '通貨',
+              description: '支払金額の通貨。例：JPY、USD、EUR',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（通貨）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            },
+            registrationNumber: {
+              type: 'object',
+              title: '登録番号',
+              description: '適格請求書発行事業者の登録番号。法人番号がある場合は「T+法人番号」、ない場合は「T+13桁の固有番号」(例：T0000000000000)。',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（登録番号）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            },
+            notes: {
+              type: 'object',
+              title: '注記',
+              description: '領収書や支払に関して補足や特記事項があれば記入します。',
+              properties: {
+                value: {
+                  type: 'string',
+                  description: '実際の文字列値（注記）'
+                },
+                x: {
+                  type: 'number',
+                  description: '座標X'
+                },
+                y: {
+                  type: 'number',
+                  description: '座標Y'
+                },
+                width: {
+                  type: 'number',
+                  description: '幅'
+                },
+                height: {
+                  type: 'number',
+                  description: '高さ'
+                }
+              },
+              required: ['value', 'x', 'y', 'width', 'height'],
+              additionalProperties: false
+            }
+          },
+          required: [
+            'imageWidthPx',
+            'imageHeightPx',
+            'payeeName',
+            'issueDate',
+            'amountIncludingTax',
+            'currency',
+            'registrationNumber',
+            'notes'
+          ],
+          additionalProperties: false
+        }
+      }
+    },
     max_tokens: 1024
   };
 
