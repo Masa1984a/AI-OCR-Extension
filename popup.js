@@ -5,6 +5,8 @@ let currentStream = null;
 const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureBtn = document.getElementById('captureBtn');
+const attachBtn = document.getElementById('attachBtn');
+const fileInput = document.getElementById('fileInput');
 const ocrBtn = document.getElementById('ocrBtn');
 const capturedImage = document.getElementById('capturedImage');
 // 撮り直しボタン取得
@@ -59,6 +61,7 @@ chrome.storage.local.get(['preserveImageOnReturn', 'capturedImageData'], (data) 
     
     // ボタン状態を設定
     captureBtn.style.display = 'none'; // 「撮影」ボタンを非表示
+    attachBtn.style.display = 'none'; // 「添付」ボタンも非表示
     resetBtn.style.display = 'block';
     ocrBtn.disabled = false;
     
@@ -102,9 +105,10 @@ captureBtn.addEventListener('click', () => {
   
   // その他ボタン活性化
   ocrBtn.disabled = false;
-  // 追加: 撮り直しボタン表示、撮影ボタン非表示
+  // 追加: 撮り直しボタン表示、撮影ボタンと添付ボタンを非表示
   resetBtn.style.display = 'block';
   captureBtn.style.display = 'none'; // 撮影ボタンを非表示に
+  attachBtn.style.display = 'none'; // 添付ボタンも非表示に
 });
 
 // AIモデル選択の参照を取得
@@ -865,8 +869,9 @@ resetBtn.addEventListener('click', () => {
   capturedImage.style.display = 'none';
   ocrBtn.disabled = true;
   
-  // 撮影ボタンを表示
+  // 撮影ボタンと添付ボタンを表示
   captureBtn.style.display = 'block';
+  attachBtn.style.display = 'block';
   
   // カメラを再起動
   startCamera()
@@ -878,6 +883,66 @@ resetBtn.addEventListener('click', () => {
       console.error('カメラ再起動エラー:', err);
       alert('カメラの再起動に失敗しました。ページをリロードしてください。');
     });
+});
+
+// 5. 添付ボタンのクリックイベント - 隠しファイル入力をクリック
+attachBtn.addEventListener('click', () => {
+  fileInput.click();
+});
+
+// 6. ファイル選択イベント
+fileInput.addEventListener('change', (e) => {
+  if (e.target.files && e.target.files[0]) {
+    const file = e.target.files[0];
+    
+    // ファイルタイプチェック (念のため)
+    if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+      alert('JPEGまたはPNG形式の画像ファイルを選択してください。');
+      return;
+    }
+
+    // 既存のカメラストリームがあれば停止
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+      currentStream = null;
+    }
+    
+    // FileReaderでファイルを読み込む
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      // 画像のDataURLを取得
+      const dataUrl = event.target.result;
+      
+      // 画像表示
+      capturedImage.src = dataUrl;
+      capturedImage.style.display = 'block';
+      video.style.display = 'none';
+      video.srcObject = null;
+      
+      // 画像をキャンバスに描画 (OCR処理用)
+      const img = new Image();
+      img.onload = function() {
+        // キャンバスのサイズを画像に合わせる
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        
+        // ボタン状態を変更
+        resetBtn.style.display = 'block';
+        captureBtn.style.display = 'none';
+        attachBtn.style.display = 'none';
+        ocrBtn.disabled = false;
+      };
+      img.src = dataUrl;
+    };
+    
+    // ファイルを読み込み開始
+    reader.readAsDataURL(file);
+    
+    // ファイル選択をリセット (同じファイルを再選択できるように)
+    fileInput.value = '';
+  }
 });
 
 // 7. ページ離脱時のクリーンアップ

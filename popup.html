@@ -99,9 +99,12 @@
       <!-- ボタン群 -->
       <div class="section button-group">
         <button id="captureBtn">撮影</button>
-        <button id="resetBtn" style="display:none;">撮り直し</button>
+        <button id="attachBtn">添付</button>
+        <button id="resetBtn" style="display:none;">撮り直し/添付し直し</button>
         <button id="ocrBtn" disabled>OCR解析</button>
       </div>
+      <!-- 非表示のファイル入力 -->
+      <input type="file" id="fileInput" accept="image/jpeg,image/png" style="display:none;" />
     </div>
     <script src="popup.js"></script>
   </body>
